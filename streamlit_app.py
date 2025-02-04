@@ -46,7 +46,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-@st.cache_resource(show_spinner=True)
+#@st.cache_resource(show_spinner=True)
 def extract_model_names(
     models_info: Dict[str, List[Dict[str, Any]]],
 ) -> Tuple[str, ...]:
@@ -59,8 +59,8 @@ def extract_model_names(
     Returns:
         Tuple[str, ...]: A tuple of model names.
     """
-    logger.info("Extracting model names from models_info")
-    model_names = tuple(model["name"] for model in models_info["models"])
+    logger.info(f"Extracting model names from models_info:{models_info}")
+    model_names = tuple(model["model"] for model in models_info["models"])
     logger.info(f"Extracted model names: {model_names}")
     return model_names
 
@@ -123,12 +123,15 @@ def process_question(question: str, vector_db: Chroma, selected_model: str) -> s
     # Query prompt template
     QUERY_PROMPT = PromptTemplate(
         input_variables=["question"],
-        template="""You are an AI language model assistant. Your task is to generate 2
-        different versions of the given user question to retrieve relevant documents from
-        a vector database. By generating multiple perspectives on the user question, your
-        goal is to help the user overcome some of the limitations of the distance-based
-        similarity search. Provide these alternative questions separated by newlines.
-        Original question: {question}""",
+        # template="""You are an AI language model assistant. Your task is to generate 2
+        # different versions of the given user question to retrieve relevant documents from
+        # a vector database. By generating multiple perspectives on the user question, your
+        # goal is to help the user overcome some of the limitations of the distance-based
+        # similarity search. Provide these alternative questions separated by newlines.
+        # Original question: {question}""",
+        template="""你是一名 AI 语言模型助手。你的任务是生成给定用户问题的 2 个不同版本，
+        以从向量数据库中检索相关文档。通过生成用户问题的多个视角，你的目标是帮助用户克服基于距离的相似性搜索的一些限制。
+        提供这些以换行符分隔的备选问题。原始问题：{question}""",
     )
 
     # Set up retriever
@@ -142,6 +145,10 @@ def process_question(question: str, vector_db: Chroma, selected_model: str) -> s
     template = """Answer the question based ONLY on the following context:
     {context}
     Question: {question}
+    """
+    template = """仅根据以下上下文回答问题，并使用中文回答:
+    {context}
+    问题: {question}
     """
 
     prompt = ChatPromptTemplate.from_template(template)

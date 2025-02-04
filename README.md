@@ -46,7 +46,23 @@ A powerful local RAG (Retrieval Augmented Generation) application that lets you 
 #### Option 1: Streamlit Interface
 ```bash
 streamlit run streamlit_app.py
+#解决sqlite版本问题
+dnf install sqlite 
+#版仍本不对，采用编译源码的方式：
+# https://www.sqlite.org/download.html
+# wget https://www.sqlite.org/2024/sqlite-autoconf-3470200.tar.gz
+# tar -xzf sqlite-autoconf-3470200.tar.gz
+# cd sqlite-autoconf-3470200
+# ./configure --enable-fts3=yes --enable-fts4=no --prefix=/usr/local
+# make
+# sudo make install
+# echo 'export PATH=/usr/local/bin:$PATH' >> ~/.bashrc
+# source ~/.bashrc
+# sqlite3 --version
+# 起个别名：sudo ln -s /usr/local/bin/sqlite3 /usr/bin/sqlite
+# 为了能让python找到sqlite，需要：echo 'export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
 ```
+
 Then open your browser to `http://localhost:8501`
 
 ![Streamlit UI](st_app_ui.png)

@@ -124,9 +124,11 @@ celerybeat.pid
 .venv
 env/
 venv/
+venv-ollama/
 ENV/
 env.bak/
 venv.bak/
+github/
 
 # Spyder project settings
 .spyderproject
